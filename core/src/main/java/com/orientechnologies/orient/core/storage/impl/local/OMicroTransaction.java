@@ -727,4 +727,9 @@ public final class OMicroTransaction implements OBasicTransaction, OTransactionI
   public ORecordOperation getRecordEntry(ORID currentRid) {
     return recordOperations.get(currentRid);
   }
+
+  @Override
+  public void setMetadata(Optional<byte[]> metadata) {
+    throw new UnsupportedOperationException();
+  }
 }
