@@ -88,6 +88,8 @@ public final class OMicroTransaction implements OBasicTransaction, OTransactionI
   private int     level        = 0;
   private int     recordSerial = -2;
 
+  private Optional<OTxMetadataHolder> metadata = Optional.empty();
+
   /**
    * Instantiates a new micro-transaction.
    *
@@ -729,8 +731,20 @@ public final class OMicroTransaction implements OBasicTransaction, OTransactionI
   }
 
   @Override
-  public void setMetadata(Optional<byte[]> metadata) {
-    throw new UnsupportedOperationException();
+  public Optional<byte[]> getMetadata() {
+    return metadata.map((h) -> h.metadata());
+  }
+
+  @Override
+  public void storageBegun() {
+    if (metadata.isPresent()) {
+      metadata.get().notifyMetadataRead();
+    }
+  }
+
+  @Override
+  public void setMetadataHolder(Optional<OTxMetadataHolder> metadata) {
+    this.metadata = metadata;
   }
 
   public Iterator<byte[]> getSerializedOperations() {
